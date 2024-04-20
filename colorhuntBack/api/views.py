@@ -7,10 +7,10 @@ from api.serializers import PaletteSerializer
 # Create your views here.
 
 class PalettesList(APIView):
-    def get(self, request):
+    def get(self, request, format=None):
         return Response(PaletteSerializer(Palette.objects.all(), many=True).data, status=HTTP_200_OK)
     
-    def post(self, request):
+    def post(self, request, format=None):
         serializer = PaletteSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -18,19 +18,19 @@ class PalettesList(APIView):
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
     
 class PaletteDetail(APIView):
-    def get_object(self, id):
+    def get_object(self, id, format=None):
         try:
             return Palette.objects.get(id=id)
         except Palette.DoesNotExist:
             return None
     
-    def get(self, r, id):
+    def get(self, r, id, format=None):
         palette = self.get_object(id)
         if palette == None:
             return Response(status=HTTP_404_NOT_FOUND)
         return Response(PaletteSerializer(palette).data)
     
-    def put(self, r, id):
+    def put(self, r, id, format=None):
         palette = self.get_object(id)
         if palette == None:
             return Response(status=HTTP_404_NOT_FOUND)
@@ -40,7 +40,7 @@ class PaletteDetail(APIView):
             return Response(serializer.data, status=HTTP_200_OK)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
     
-    def delete(self, r, id):
+    def delete(self, r, id, format=None):
         palette = self.get_object(id)
         if palette == None:
             return Response(status=HTTP_404_NOT_FOUND)
